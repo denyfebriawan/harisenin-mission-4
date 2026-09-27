@@ -1,1 +1,18 @@
-/* Custom styles will be added in a later part */
+/* Small extras Tailwind's utility classes don't cover directly */
+
+/* Strike-through animation feel for completed tasks */
+.task-text.is-done {
+  text-decoration: line-through;
+  color: #94a3b8; /* slate-400 */
+}
+
+/* Make the whole card look slightly muted once a task is done */
+.task-card.is-done {
+  opacity: 0.7;
+}
+
+/* Highlight overdue due-date text in red regardless of which list it's in */
+.due-at.is-late {
+  color: #e11d48; /* rose-600 */
+  font-weight: 600;
+}

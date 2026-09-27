@@ -30,6 +30,54 @@
       </div>
     </header>
 
+    <!-- ===== New task form ===== -->
+    <section class="bg-white rounded-2xl shadow p-5 mb-6">
+      <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Add a task</h2>
+      <form id="taskForm" class="space-y-4">
+        <div>
+          <label for="taskText" class="block text-sm font-medium text-slate-600 mb-1">Task</label>
+          <textarea
+            id="taskText"
+            rows="3"
+            required
+            placeholder="Write what needs to be done..."
+            class="w-full rounded-lg border border-slate-200 p-3 text-sm outline-none focus:ring-2 focus:ring-indigo-400"
+          ></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="taskPriority" class="block text-sm font-medium text-slate-600 mb-1">Priority</label>
+            <select
+              id="taskPriority"
+              class="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400"
+            >
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="taskDueDate" class="block text-sm font-medium text-slate-600 mb-1">Due date &amp; time</label>
+            <input
+              id="taskDueDate"
+              type="datetime-local"
+              required
+              class="w-full rounded-lg border border-slate-200 p-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition"
+        >
+          Submit task
+        </button>
+      </form>
+    </section>
+
     <!-- More sections will be added part by part -->
   </div>
 

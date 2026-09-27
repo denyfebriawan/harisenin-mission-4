@@ -2,6 +2,12 @@
 const profileNameInput = document.getElementById('profileName');
 const profilePositionInput = document.getElementById('profilePosition');
 
+// ===== List element references =====
+const todoList = document.getElementById('todoList');
+const overdueList = document.getElementById('overdueList');
+const doneList = document.getElementById('doneList');
+const taskCardTemplate = document.getElementById('taskCardTemplate');
+
 // ===== State =====
 // Load any previously saved tasks from localStorage. localStorage only stores
 // strings, so we JSON.parse the saved string back into a real array of objects.
@@ -58,4 +64,73 @@ function priorityBadgeClasses(priority) {
   }
 }
 
-// Rendering, actions, and event wiring are added in the next parts.
+// ===== Rendering =====
+
+// Builds one task card (cloned from the <template> in index.html) and wires up
+// its checkbox / delete button to that specific task's id.
+function createTaskCard(task) {
+  const fragment = taskCardTemplate.content.cloneNode(true);
+  const card = fragment.querySelector('.task-card');
+
+  const checkbox = fragment.querySelector('.task-checkbox');
+  const textEl = fragment.querySelector('.task-text');
+  const badgeEl = fragment.querySelector('.priority-badge');
+  const createdEl = fragment.querySelector('.created-at');
+  const dueEl = fragment.querySelector('.due-at');
+  const deleteBtn = fragment.querySelector('.delete-btn');
+
+  checkbox.checked = task.done;
+  textEl.textContent = task.text;
+  badgeEl.textContent = task.priority;
+  badgeEl.className = `priority-badge px-2 py-0.5 rounded-full font-medium ${priorityBadgeClasses(task.priority)}`;
+  createdEl.textContent = `Created: ${formatDate(task.createdAt)}`;
+  dueEl.textContent = `Due: ${formatDate(task.dueDate)}`;
+
+  if (task.done) {
+    card.classList.add('is-done');
+    textEl.classList.add('is-done');
+  }
+  if (isOverdue(task)) {
+    dueEl.classList.add('is-late');
+  }
+
+  // Toggle done/undone when the checkbox is clicked.
+  checkbox.addEventListener('change', () => toggleDone(task.id));
+
+  // Remove this single task when its delete button is clicked.
+  deleteBtn.addEventListener('click', () => deleteTask(task.id));
+
+  return fragment;
+}
+
+// Clears a list container and either shows an empty-state message, or fills it
+// with task cards built from `items`.
+function renderList(container, items, emptyMessage) {
+  container.innerHTML = '';
+
+  if (items.length === 0) {
+    const msg = document.createElement('p');
+    msg.className = 'text-sm text-slate-400 italic';
+    msg.textContent = emptyMessage;
+    container.appendChild(msg);
+    return;
+  }
+
+  items.forEach((task) => {
+    container.appendChild(createTaskCard(task));
+  });
+}
+
+// Sorts `tasks` into the three buckets (overdue / to do / done) and re-renders
+// all three lists. Called after every change to `tasks`.
+function render() {
+  const overdueTasks = tasks.filter((t) => isOverdue(t));
+  const doneTasks = tasks.filter((t) => t.done);
+  const todoTasks = tasks.filter((t) => !t.done && !isOverdue(t));
+
+  renderList(overdueList, overdueTasks, 'No overdue tasks.');
+  renderList(todoList, todoTasks, 'Nothing to do yet.');
+  renderList(doneList, doneTasks, 'No finished tasks yet.');
+}
+
+// Actions (addTask/toggleDone/deleteTask) and event wiring are added in the next parts.

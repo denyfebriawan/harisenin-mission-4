@@ -8,6 +8,13 @@ const overdueList = document.getElementById('overdueList');
 const doneList = document.getElementById('doneList');
 const taskCardTemplate = document.getElementById('taskCardTemplate');
 
+// ===== Form & button element references =====
+const taskForm = document.getElementById('taskForm');
+const taskTextInput = document.getElementById('taskText');
+const taskPriorityInput = document.getElementById('taskPriority');
+const taskDueDateInput = document.getElementById('taskDueDate');
+const deleteAllBtn = document.getElementById('deleteAllBtn');
+
 // ===== State =====
 // Load any previously saved tasks from localStorage. localStorage only stores
 // strings, so we JSON.parse the saved string back into a real array of objects.
@@ -133,4 +140,71 @@ function render() {
   renderList(doneList, doneTasks, 'No finished tasks yet.');
 }
 
-// Actions (addTask/toggleDone/deleteTask) and event wiring are added in the next parts.
+// ===== Actions that change state =====
+
+function addTask(text, priority, dueDate) {
+  const newTask = {
+    id: crypto.randomUUID(),
+    text,
+    priority,
+    dueDate,
+    createdAt: new Date().toISOString(),
+    done: false,
+  };
+
+  tasks.push(newTask);
+  saveTasks();
+  render();
+}
+
+function toggleDone(id) {
+  const task = tasks.find((t) => t.id === id);
+  if (!task) return;
+  task.done = !task.done;
+  saveTasks();
+  render();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter((t) => t.id !== id);
+  saveTasks();
+  render();
+}
+
+function deleteAllTasks() {
+  if (tasks.length === 0) return;
+  const confirmed = confirm('Delete ALL tasks? This cannot be undone.');
+  if (!confirmed) return;
+  tasks = [];
+  saveTasks();
+  render();
+}
+
+// ===== Event listeners for the form and buttons =====
+
+taskForm.addEventListener('submit', (event) => {
+  // Stop the browser from doing its default full-page reload on form submit.
+  event.preventDefault();
+
+  const text = taskTextInput.value.trim();
+  const priority = taskPriorityInput.value;
+  const dueDate = taskDueDateInput.value;
+
+  if (!text || !dueDate) return;
+
+  addTask(text, priority, dueDate);
+
+  // Reset the form so it's ready for the next task.
+  taskForm.reset();
+  taskPriorityInput.value = 'medium';
+});
+
+deleteAllBtn.addEventListener('click', deleteAllTasks);
+
+// ===== Keep the overdue status live =====
+// A task can "become" overdue purely because time passed, even with no user
+// action. Re-render every 30 seconds so it moves from To Do to Overdue on its own.
+setInterval(render, 30000);
+
+// ===== Initial render on page load =====
+render();

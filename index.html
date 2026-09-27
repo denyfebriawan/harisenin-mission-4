@@ -9,7 +9,28 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800">
   <div class="max-w-4xl mx-auto p-4 md:p-8">
-    <!-- Sections will be added part by part -->
+
+    <!-- ===== Profile card ===== -->
+    <header class="bg-white rounded-2xl shadow p-5 mb-6 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+      <div class="flex-1">
+        <label for="profileName" class="block text-xs font-medium text-slate-400 uppercase tracking-wide">Name</label>
+        <input
+          id="profileName"
+          type="text"
+          placeholder="Your name"
+          class="w-full text-lg font-semibold text-slate-800 outline-none placeholder:font-normal placeholder:text-slate-300"
+        />
+        <label for="profilePosition" class="block text-xs font-medium text-slate-400 uppercase tracking-wide mt-2">Position</label>
+        <input
+          id="profilePosition"
+          type="text"
+          placeholder="Your position"
+          class="w-full text-sm text-slate-500 outline-none placeholder:text-slate-300"
+        />
+      </div>
+    </header>
+
+    <!-- More sections will be added part by part -->
   </div>
 
   <script src="script.js"></script>
